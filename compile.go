@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 
 	"github.com/gomarkdown/markdown"
+	"github.com/gomarkdown/markdown/html"
+	"github.com/gomarkdown/markdown/parser"
 )
 
 // load all files in folderPath
@@ -36,6 +38,8 @@ func compileMarkdownFiles(sourceFolderPath string, outputFolderPath string) {
 		filesOfInputFolder[index] = p
 	}
 
+	menuContent := generateMenu(sourceFolderPath)
+
 	for _, relativeFilePath := range filesOfInputFolder {
 		if relativeFilePath == menuPage {
 			continue
@@ -48,7 +52,7 @@ func compileMarkdownFiles(sourceFolderPath string, outputFolderPath string) {
 		}
 
 		if path.Ext(relativeFilePath) == ".md" {
-			log.Print(relativeFilePath)
+			generatePage(sourceFolderPath, outputFolderPath, menuContent, relativeFilePath)
 		} else {
 			copyFile(sourceFolderPath, outputFolderPath, relativeFilePath)
 		}
@@ -57,15 +61,15 @@ func compileMarkdownFiles(sourceFolderPath string, outputFolderPath string) {
 }
 
 // generate the menu of nav-bar
-func generateMenu(sourceFolderPath string) ([]byte, error) {
+func generateMenu(sourceFolderPath string) string {
 	log.Println("Generating the menu")
 	defer log.Print("Finish generating the menu")
 
 	mdData, err := ioutil.ReadFile(path.Join(sourceFolderPath, menuPage))
 	if err != nil {
-		return nil, err
+		return "<!-- " + err.Error() + "-->"
 	}
-	return markdown.ToHTML(mdData, nil, nil), nil
+	return string(markdown.ToHTML(mdData, nil, nil))
 }
 
 func copyFile(sourceFolderPath string, outputFolderPath string, relativeFilePath string) {
@@ -76,4 +80,34 @@ func copyFile(sourceFolderPath string, outputFolderPath string, relativeFilePath
 	}
 
 	ioutil.WriteFile(path.Join(outputFolderPath, relativeFilePath), data, 0644)
+}
+
+// Generate page
+func generatePage(sourceFolderPath string, outputFolderPath string, menuContent string, relativeFilePath string) {
+	dir, f := filepath.Split(relativeFilePath)
+	var outputRelativeFilePath string
+	if f == "README.md" {
+		outputRelativeFilePath = path.Join(dir, "index.html")
+	} else {
+		outputRelativeFilePath = path.Join(dir, f[0:len(f)-2]+"html")
+	}
+
+	log.Printf("Generating %s (output: %s)", relativeFilePath, outputRelativeFilePath)
+
+	mdData, err := ioutil.ReadFile(path.Join(sourceFolderPath, relativeFilePath))
+	if err != nil {
+		return
+	}
+
+	outContent := markdown.ToHTML(mdData,
+		parser.NewWithExtensions(parser.CommonExtensions),
+		html.NewRenderer(
+			html.RendererOptions{
+				Title: "A custom title",
+				Flags: html.CommonFlags | html.TOC | html.CommonFlags,
+			},
+		),
+	)
+
+	ioutil.WriteFile(path.Join(outputFolderPath, outputRelativeFilePath), outContent, 0644)
 }
