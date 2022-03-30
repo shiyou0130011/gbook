@@ -36,20 +36,22 @@ func compileMarkdownFiles(sourceFolderPath string, outputFolderPath string) {
 		filesOfInputFolder[index] = p
 	}
 
-	for _, filePath := range filesOfInputFolder {
-		if filePath == menuPage {
+	for _, relativeFilePath := range filesOfInputFolder {
+		if relativeFilePath == menuPage {
 			continue
 		}
 
-		outDir := path.Join(outputFolderPath, filepath.Dir(filePath))
+		outDir := path.Join(outputFolderPath, filepath.Dir(relativeFilePath))
 		if _, err := os.Stat(outDir); os.IsNotExist(err) {
 			log.Print("Create folder ", outDir)
 			os.Mkdir(outDir, os.ModeDir)
 		}
 
-		// if path.Ext(filePath) == ".md" {
-		// 	log.Print(filePath)
-		// }
+		if path.Ext(relativeFilePath) == ".md" {
+			log.Print(relativeFilePath)
+		} else {
+			copyFile(sourceFolderPath, outputFolderPath, relativeFilePath)
+		}
 
 	}
 }
@@ -64,4 +66,14 @@ func generateMenu(sourceFolderPath string) ([]byte, error) {
 		return nil, err
 	}
 	return markdown.ToHTML(mdData, nil, nil), nil
+}
+
+func copyFile(sourceFolderPath string, outputFolderPath string, relativeFilePath string) {
+	log.Printf(`Copy file "%s" from "%s" to "%s"`, relativeFilePath, sourceFolderPath, outputFolderPath)
+	data, err := ioutil.ReadFile(path.Join(sourceFolderPath, relativeFilePath))
+	if err != nil {
+		return
+	}
+
+	ioutil.WriteFile(path.Join(outputFolderPath, relativeFilePath), data, 0644)
 }
