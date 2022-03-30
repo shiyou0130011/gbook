@@ -45,8 +45,5 @@ func main() {
 	}
 	log.Printf("Generate output folder: %s", outFolderName)
 
-	outFolder, _ := os.Open(outFolderName)
-	defer outFolder.Close()
-
-	log.Printf("%#v", loadFilesInFolder(sourceFolderPath))
+	compileMarkdownFiles(sourceFolderPath, outFolderName)
 }
