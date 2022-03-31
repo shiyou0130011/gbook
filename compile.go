@@ -37,7 +37,7 @@ func loadFilesInFolder(folderPath string) (fileList []string) {
 	return
 }
 
-func compileMarkdownFiles(sourceFolderPath string, outputFolderPath string) {
+func compileMarkdownFiles(sourceFolderPath string, outputFolderPath string, bookTitle string) {
 	filesOfInputFolder := loadFilesInFolder(sourceFolderPath)
 	for index, f := range filesOfInputFolder {
 		p, _ := filepath.Rel(sourceFolderPath, f)
@@ -59,7 +59,7 @@ func compileMarkdownFiles(sourceFolderPath string, outputFolderPath string) {
 		}
 
 		if path.Ext(relativeFilePath) == ".md" {
-			generatePage(sourceFolderPath, outputFolderPath, menuContent, relativeFilePath)
+			generatePage(sourceFolderPath, outputFolderPath, menuContent, relativeFilePath, bookTitle)
 		} else {
 			copyFile(sourceFolderPath, outputFolderPath, relativeFilePath)
 		}
@@ -103,7 +103,7 @@ func copyFile(sourceFolderPath string, outputFolderPath string, relativeFilePath
 }
 
 // Generate page
-func generatePage(sourceFolderPath string, outputFolderPath string, menuContent string, relativeFilePath string) {
+func generatePage(sourceFolderPath string, outputFolderPath string, menuContent string, relativeFilePath string, bookTitle string) {
 	dir, f := filepath.Split(relativeFilePath)
 	var outputRelativeFilePath string
 	if f == "README.md" {
@@ -119,7 +119,12 @@ func generatePage(sourceFolderPath string, outputFolderPath string, menuContent 
 		return
 	}
 
-	outNode := markdown.Parse(mdData, parser.NewWithExtensions(parser.CommonExtensions))
+	outNode := markdown.Parse(
+		mdData,
+		parser.NewWithExtensions(
+			parser.CommonExtensions|parser.AutoHeadingIDs,
+		),
+	)
 	ast.WalkFunc(outNode, handleLinkTag)
 	outContent := markdown.Render(
 		outNode,
@@ -138,12 +143,11 @@ func generatePage(sourceFolderPath string, outputFolderPath string, menuContent 
 
 	t := template.Must(template.ParseFS(defaultTemplate, "templates/default/*.html"))
 	t.ExecuteTemplate(outFile, "index.html", struct{ Title, Menu, MainContent interface{} }{
-		Title:       "G Book",
+		Title:       bookTitle,
 		Menu:        menuContent,
 		MainContent: string(outContent),
 	})
 
-	// ioutil.WriteFile(, outContent, 0644)
 }
 
 func handleLinkTag(node ast.Node, entering bool) ast.WalkStatus {

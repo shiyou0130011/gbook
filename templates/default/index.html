@@ -23,7 +23,10 @@
 </head>
 <body>
 	<main>
-		<nav id="menu-bar">{{.Menu}}</nav>
+		<nav id="menu-bar">
+			<a href="/">{{.Title}}</a>
+			{{.Menu}}
+		</nav>
 		<article id="main-article">{{.MainContent}}</article>
 	</main>
 </body>

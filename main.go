@@ -19,7 +19,9 @@ func main() {
 	sourceFolderPath := ""
 	showHelp := false
 	serveHttp := false
+	title := ""
 	flag.StringVar(&sourceFolderPath, "f", ".", "The folder of the book")
+	flag.StringVar(&title, "title", "GBook", "The title of the book")
 	flag.BoolVar(&showHelp, "h", false, "Show help message")
 	flag.BoolVar(&serveHttp, "serve", false, "Serve the book")
 	flag.Parse()
@@ -48,7 +50,7 @@ func main() {
 	}
 	log.Printf("Generate output folder: %s", outFolderName)
 
-	compileMarkdownFiles(sourceFolderPath, outFolderName)
+	compileMarkdownFiles(sourceFolderPath, outFolderName, title)
 
 	if serveHttp {
 		http.ListenAndServe(":4000", http.FileServer(http.Dir(outFolderName)))
