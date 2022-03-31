@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"regexp"
 	"text/template"
 
 	"github.com/gomarkdown/markdown"
@@ -77,20 +78,8 @@ func generateMenu(sourceFolderPath string) string {
 	}
 
 	parentNode := markdown.Parse(mdData, parser.New())
-	ast.WalkFunc(parentNode, func(node ast.Node, entering bool) ast.WalkStatus {
-		if link, ok := node.(*ast.Link); ok {
-			u := string(link.Destination)
-			dir, file := filepath.Split(u)
-			if file == indexPage {
-				link.Destination = []byte(filepath.Join(dir, "index.html"))
-			} else if file[len(file)-3:] == ".md" {
-				link.Destination = []byte(u[0:len(u)-3] + ".html")
-			}
+	ast.WalkFunc(parentNode, handleLinkTag)
 
-		}
-
-		return ast.GoToNext
-	})
 	return string(
 		markdown.Render(
 			parentNode,
@@ -130,8 +119,10 @@ func generatePage(sourceFolderPath string, outputFolderPath string, menuContent 
 		return
 	}
 
-	outContent := markdown.ToHTML(mdData,
-		parser.NewWithExtensions(parser.CommonExtensions),
+	outNode := markdown.Parse(mdData, parser.NewWithExtensions(parser.CommonExtensions))
+	ast.WalkFunc(outNode, handleLinkTag)
+	outContent := markdown.Render(
+		outNode,
 		html.NewRenderer(
 			html.RendererOptions{
 				Flags: html.CommonFlags | html.TOC | html.CommonFlags,
@@ -153,4 +144,31 @@ func generatePage(sourceFolderPath string, outputFolderPath string, menuContent 
 	})
 
 	// ioutil.WriteFile(, outContent, 0644)
+}
+
+func handleLinkTag(node ast.Node, entering bool) ast.WalkStatus {
+	if link, ok := node.(*ast.Link); ok {
+
+		if match, err := regexp.Match(`\b([A-Za-z]+:|)//.+`, link.Destination); err != nil {
+			log.Print(err)
+		} else if match {
+			if link.Attribute == nil {
+				link.Attribute = &ast.Attribute{
+					Attrs: map[string][]byte{},
+				}
+			}
+			link.Attrs["target"] = []byte("_blank")
+		} else {
+
+			u := string(link.Destination)
+			dir, file := filepath.Split(u)
+			if file == indexPage {
+				link.Destination = []byte(filepath.Join(dir, "index.html"))
+			} else if file[len(file)-3:] == ".md" {
+				link.Destination = []byte(u[0:len(u)-3] + ".html")
+			}
+		}
+	}
+
+	return ast.GoToNext
 }
