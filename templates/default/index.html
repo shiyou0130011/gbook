@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<head>
+	<title>{{.Title}}</title>
+	<style>
+		body{
+			margin: 0;
+		}
+		main{
+			display: flex;
+
+			width: 100vw;
+			height: 100vh;
+		}
+		nav#menu-bar{
+			width: 300px;
+			background-color: #fafafa;
+		}
+		article#main-article{
+			flex-basis: fit-content;
+		}
+
+	</style>
+</head>
+<body>
+	<main>
+		<nav id="menu-bar">{{.Menu}}</nav>
+		<article id="main-article">{{.MainContent}}</article>
+	</main>
+</body>

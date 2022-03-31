@@ -1,16 +1,21 @@
 package main
 
 import (
+	"embed"
 	"io/ioutil"
 	"log"
 	"os"
 	"path"
 	"path/filepath"
+	"text/template"
 
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
 	"github.com/gomarkdown/markdown/parser"
 )
+
+//go:embed templates/default
+var defaultTemplate embed.FS
 
 // load all files in folderPath
 func loadFilesInFolder(folderPath string) (fileList []string) {
@@ -103,11 +108,23 @@ func generatePage(sourceFolderPath string, outputFolderPath string, menuContent 
 		parser.NewWithExtensions(parser.CommonExtensions),
 		html.NewRenderer(
 			html.RendererOptions{
-				Title: "A custom title",
 				Flags: html.CommonFlags | html.TOC | html.CommonFlags,
 			},
 		),
 	)
 
-	ioutil.WriteFile(path.Join(outputFolderPath, outputRelativeFilePath), outContent, 0644)
+	outFile, err := os.Create(path.Join(outputFolderPath, outputRelativeFilePath))
+	if err != nil {
+		return
+	}
+	defer outFile.Close()
+
+	t := template.Must(template.ParseFS(defaultTemplate, "templates/default/*.html"))
+	t.ExecuteTemplate(outFile, "index.html", struct{ Title, Menu, MainContent interface{} }{
+		Title:       "G Book",
+		Menu:        menuContent,
+		MainContent: string(outContent),
+	})
+
+	// ioutil.WriteFile(, outContent, 0644)
 }
