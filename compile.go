@@ -10,6 +10,7 @@ import (
 	"text/template"
 
 	"github.com/gomarkdown/markdown"
+	"github.com/gomarkdown/markdown/ast"
 	"github.com/gomarkdown/markdown/html"
 	"github.com/gomarkdown/markdown/parser"
 )
@@ -74,7 +75,32 @@ func generateMenu(sourceFolderPath string) string {
 	if err != nil {
 		return "<!-- " + err.Error() + "-->"
 	}
-	return string(markdown.ToHTML(mdData, nil, nil))
+
+	parentNode := markdown.Parse(mdData, parser.New())
+	ast.WalkFunc(parentNode, func(node ast.Node, entering bool) ast.WalkStatus {
+		if link, ok := node.(*ast.Link); ok {
+			u := string(link.Destination)
+			dir, file := filepath.Split(u)
+			if file == indexPage {
+				link.Destination = []byte(filepath.Join(dir, "index.html"))
+			} else if file[len(file)-3:] == ".md" {
+				link.Destination = []byte(u[0:len(u)-3] + ".html")
+			}
+
+		}
+
+		return ast.GoToNext
+	})
+	return string(
+		markdown.Render(
+			parentNode,
+			html.NewRenderer(
+				html.RendererOptions{
+					Flags: html.CommonFlags,
+				},
+			),
+		),
+	)
 }
 
 func copyFile(sourceFolderPath string, outputFolderPath string, relativeFilePath string) {
