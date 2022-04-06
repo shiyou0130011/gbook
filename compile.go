@@ -19,24 +19,6 @@ import (
 //go:embed templates/default
 var defaultTemplate embed.FS
 
-// load all files in folderPath
-func loadFilesInFolder(folderPath string) (fileList []string) {
-	files, err := ioutil.ReadDir(folderPath)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, file := range files {
-		if file.IsDir() {
-			fileList = append(fileList, loadFilesInFolder(path.Join(folderPath, file.Name()))...)
-			continue
-		}
-		fileList = append(fileList, path.Join(folderPath, file.Name()))
-	}
-	return
-}
-
 func compileMarkdownFiles(sourceFolderPath string, outputFolderPath string, bookTitle string) {
 	filesOfInputFolder := loadFilesInFolder(sourceFolderPath)
 	for index, f := range filesOfInputFolder {
@@ -92,16 +74,6 @@ func generateMenu(sourceFolderPath string) string {
 	)
 }
 
-func copyFile(sourceFolderPath string, outputFolderPath string, relativeFilePath string) {
-	log.Printf(`Copy file "%s" from "%s" to "%s"`, relativeFilePath, sourceFolderPath, outputFolderPath)
-	data, err := ioutil.ReadFile(path.Join(sourceFolderPath, relativeFilePath))
-	if err != nil {
-		return
-	}
-
-	ioutil.WriteFile(path.Join(outputFolderPath, relativeFilePath), data, 0644)
-}
-
 // Generate page
 func generatePage(sourceFolderPath string, outputFolderPath string, menuContent string, relativeFilePath string, bookTitle string) {
 	dir, f := filepath.Split(relativeFilePath)
@@ -130,7 +102,7 @@ func generatePage(sourceFolderPath string, outputFolderPath string, menuContent 
 		outNode,
 		html.NewRenderer(
 			html.RendererOptions{
-				Flags: html.CommonFlags | html.TOC | html.CommonFlags,
+				//Flags: html.CommonFlags | html.TOC | html.CommonFlags,
 			},
 		),
 	)
@@ -140,6 +112,7 @@ func generatePage(sourceFolderPath string, outputFolderPath string, menuContent 
 		return
 	}
 	defer outFile.Close()
+	ioutil.WriteFile(path.Join(outputFolderPath, relativeFilePath), outContent, 0644)
 
 	t := template.Must(template.ParseFS(defaultTemplate, "templates/default/*.html"))
 	t.ExecuteTemplate(outFile, "index.html", struct{ Title, Menu, MainContent interface{} }{
