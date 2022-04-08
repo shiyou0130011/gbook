@@ -14,13 +14,18 @@ import (
 	"github.com/gomarkdown/markdown/ast"
 	"github.com/gomarkdown/markdown/html"
 	"github.com/gomarkdown/markdown/parser"
+	sio "github.com/shiyou0130011/io"
+	"github.com/shiyou0130011/io/copy"
 )
 
 //go:embed templates/default
 var defaultTemplate embed.FS
 
 func compileMarkdownFiles(sourceFolderPath string, outputFolderPath string, bookTitle string) {
-	filesOfInputFolder := loadFilesInFolder(sourceFolderPath)
+	filesOfInputFolder, err := sio.LoadFilesInFolder(sourceFolderPath)
+	if err != nil {
+		log.Fatalf("Cannot load files in %s", sourceFolderPath)
+	}
 	for index, f := range filesOfInputFolder {
 		p, _ := filepath.Rel(sourceFolderPath, f)
 
@@ -43,7 +48,7 @@ func compileMarkdownFiles(sourceFolderPath string, outputFolderPath string, book
 		if path.Ext(relativeFilePath) == ".md" {
 			generatePage(sourceFolderPath, outputFolderPath, menuContent, relativeFilePath, bookTitle)
 		} else {
-			copyFile(sourceFolderPath, outputFolderPath, relativeFilePath)
+			copy.File(sourceFolderPath, outputFolderPath, relativeFilePath)
 		}
 
 	}
