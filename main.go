@@ -16,14 +16,21 @@ const (
 )
 
 func main() {
-	sourceFolderPath := ""
-	showHelp := false
-	serveHttp := false
-	title := ""
+	var (
+		sourceFolderPath string
+		showHelp         bool
+		serveHTTP        bool
+		port             string
+		title            string
+		outFolderName    string
+	)
 	flag.StringVar(&sourceFolderPath, "f", ".", "The folder of the book")
 	flag.StringVar(&title, "title", "GBook", "The title of the book")
 	flag.BoolVar(&showHelp, "h", false, "Show help message")
-	flag.BoolVar(&serveHttp, "serve", false, "Serve the book")
+	flag.BoolVar(&serveHTTP, "serve", false, "Serve the book")
+	flag.StringVar(&outFolderName, "out", "", "The output folder path. If it is blank, the program will create a new folder and set the parameter as the folder's path. ")
+	flag.StringVar(&port, "p", "4000", "When serving the book, the HTTP port for serving site")
+
 	flag.Parse()
 
 	if showHelp {
@@ -43,16 +50,17 @@ func main() {
 	}
 
 	// generate output folder
-
-	outFolderName, err := ioutil.TempDir(os.TempDir(), "gbook-"+path.Base(strings.ReplaceAll(sourceFolderPath, "\\", "/"))+"-*")
-	if err != nil {
-		log.Fatal("Cannot generate output folder")
+	if outFolderName == "" {
+		outFolderName, err = ioutil.TempDir(os.TempDir(), "gbook-"+path.Base(strings.ReplaceAll(sourceFolderPath, "\\", "/"))+"-*")
+		if err != nil {
+			log.Fatal("Cannot generate output folder")
+		}
+		log.Printf("Generate output folder: %s", outFolderName)
 	}
-	log.Printf("Generate output folder: %s", outFolderName)
 
 	compileMarkdownFiles(sourceFolderPath, outFolderName, title)
 
-	if serveHttp {
+	if serveHTTP {
 		http.ListenAndServe(":4000", http.FileServer(http.Dir(outFolderName)))
 	}
 }
