@@ -1,0 +1,22 @@
+body{
+	margin: 0;
+}
+main{
+	display: flex;
+
+	width: 100vw;
+	height: 100vh;
+}
+nav#menu-bar{
+	width: 300px;
+	background-color: #fafafa;
+}
+article#main-article{
+	flex-basis: fit-content;
+	padding: 1rem 1.5rem ;
+}
+
+h1, h2, h3, h4, h5, h6, th, thead{
+	font-weight: bolder;
+}
+

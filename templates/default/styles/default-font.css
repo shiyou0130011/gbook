@@ -1,0 +1,77 @@
+body[data-font="sans-serif"]{
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+body[data-font="sans-serif"] h1, 
+body[data-font="sans-serif"] h2, 
+body[data-font="sans-serif"] h3, 
+body[data-font="sans-serif"] h4, 
+body[data-font="sans-serif"] h5, 
+body[data-font="sans-serif"] h6, 
+body[data-font="sans-serif"] #main-article thead, 
+body[data-font="sans-serif"] #main-article th{
+	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+body[data-font=serif]{
+	font-family: Georgia, 'Times New Roman', Times, serif;	
+}
+
+body[data-font=serif] h1, 
+body[data-font=serif] h2, 
+body[data-font=serif] h3, 
+body[data-font=serif] h4, 
+body[data-font=serif] h5, 
+body[data-font=serif] h6, 
+body[data-font=serif] #main-article thead, 
+body[data-font=serif] #main-article th{
+	font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+:root{
+	--default-size: 1rem;
+	--large-size: 1.35rem;
+	--small-size: 12px;
+}
+
+body, body[data-size=normal]{
+	--body-font-size: var(--default-size);
+	font-size: var(--body-font-size);
+}
+
+body[data-size="large"]{
+	--body-font-size: var(--large-size);
+}
+
+body[data-size="small"]{
+	--body-font-size: var(--small-size);
+}
+
+body #main-article h1{
+	font-size: calc(1.8 * var(--body-font-size));
+}
+
+
+body #main-article h2{
+	font-size: calc(1.65 * var(--body-font-size));
+}
+
+
+body #main-article h3{
+	font-size: calc(1.5 * var(--body-font-size));
+}
+
+
+body #main-article h4{
+	font-size: calc(1.35 * var(--body-font-size));
+}
+
+
+body #main-article h5{
+	font-size: calc(1.2 * var(--body-font-size));
+}
+
+
+body #main-article h6{
+	font-size: calc(1.05 * var(--body-font-size));
+}

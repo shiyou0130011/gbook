@@ -1,27 +1,10 @@
 <!DOCTYPE html>
 <head>
 	<title>{{.Title}}</title>
-	<style>
-		body{
-			margin: 0;
-		}
-		main{
-			display: flex;
-
-			width: 100vw;
-			height: 100vh;
-		}
-		nav#menu-bar{
-			width: 300px;
-			background-color: #fafafa;
-		}
-		article#main-article{
-			flex-basis: fit-content;
-		}
-
-	</style>
+	<link href="/styles/default.css" rel="stylesheet"/>
+	<link href="/styles/default-font.css" rel="stylesheet"/>
 </head>
-<body>
+<body data-size="normal" data-font="sans-serif">
 	<main>
 		<nav id="menu-bar">
 			<a href="/">{{.Title}}</a>
