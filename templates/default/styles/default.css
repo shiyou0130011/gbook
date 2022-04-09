@@ -6,17 +6,50 @@ main{
 
 	width: 100vw;
 	height: 100vh;
+
+	overflow-y: hidden;
 }
+nav#menu-bar,
+article#main-article{
+	overflow-y: overlay;
+	padding: 1rem 1.5rem ;
+}
+
 nav#menu-bar{
 	width: 300px;
-	background-color: #fafafa;
 }
 article#main-article{
 	flex-basis: fit-content;
-	padding: 1rem 1.5rem ;
 }
 
 h1, h2, h3, h4, h5, h6, th, thead{
 	font-weight: bolder;
 }
 
+
+blockquote{
+	padding: 1rem 1.5rem;
+	margin: .25rem;
+	font-style: italic;
+	
+	position: relative;
+}
+
+blockquote::before, blockquote::after{
+	position: absolute;
+	display: block;
+	font-family: 1.25rem;
+}
+
+blockquote::before{
+	content: open-quote;
+	top: .5rem;
+	left: .5rem;
+}
+
+blockquote::after{
+	content: close-quote;
+	position: absolute;
+	right: .5rem;
+	bottom: .5rem;
+}

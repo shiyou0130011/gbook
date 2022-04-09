@@ -3,12 +3,21 @@
 	<title>{{.Title}}</title>
 	<link href="/styles/default.css" rel="stylesheet"/>
 	<link href="/styles/default-font.css" rel="stylesheet"/>
+	<link href="/styles/default-theme.css" rel="stylesheet" />
+
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+
 </head>
 <body data-size="normal" data-font="sans-serif">
 	<main>
 		<nav id="menu-bar">
 			<a href="/">{{.Title}}</a>
 			{{.Menu}}
+		</nav>
+		<nav>
+			<ul>
+				<li><span class="material-icons-outlined"></span></li>
+			</ul>
 		</nav>
 		<article id="main-article">{{.MainContent}}</article>
 	</main>
