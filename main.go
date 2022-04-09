@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 )
 
@@ -23,6 +24,7 @@ func main() {
 		port             string
 		title            string
 		outFolderName    string
+		certKeyPath      string
 	)
 	flag.StringVar(&sourceFolderPath, "f", ".", "The folder of the book")
 	flag.StringVar(&title, "title", "GBook", "The title of the book")
@@ -30,6 +32,7 @@ func main() {
 	flag.BoolVar(&serveHTTP, "serve", false, "Serve the book")
 	flag.StringVar(&outFolderName, "out", "", "The output folder path. If it is blank, the program will create a new folder and set the parameter as the folder's path. ")
 	flag.StringVar(&port, "p", "4000", "When serving the book, the HTTP port for serving site")
+	flag.StringVar(&certKeyPath, "c", "", "When serving the book, the folder used for HTTPS cert key path")
 
 	flag.Parse()
 
@@ -55,7 +58,17 @@ func main() {
 	compileMarkdownFiles(sourceFolderPath, outFolderName, title)
 
 	if serveHTTP {
-		http.ListenAndServe(":4000", http.FileServer(http.Dir(outFolderName)))
+		if certKeyPath != "" {
+			http.ListenAndServeTLS(
+				":"+port,
+				filepath.Join(certKeyPath, "cert.pem"),
+				filepath.Join(certKeyPath, "key.pem"),
+				http.FileServer(http.Dir(outFolderName)),
+			)
+		} else {
+			http.ListenAndServe(":"+port, http.FileServer(http.Dir(outFolderName)))
+		}
+
 	}
 }
 
