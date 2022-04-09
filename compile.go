@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"io/fs"
 	"io/ioutil"
 	"log"
 	"os"
@@ -21,6 +22,23 @@ import (
 //go:embed templates/default
 var defaultTemplate embed.FS
 
+func initOutputFolder(outputFolderPath string) {
+	log.Print("Init the output folder")
+	if _, err := os.Stat(outputFolderPath); os.IsNotExist(err) {
+		log.Print("Create folder ", outputFolderPath)
+		os.Mkdir(outputFolderPath, os.ModeDir)
+	}
+
+	copy.FS(defaultTemplate, "templates/default", outputFolderPath)
+	fs.WalkDir(os.DirFS(outputFolderPath), ".", func(path string, d fs.DirEntry, err error) error {
+		if filepath.Ext(path) == ".tmpl" {
+			fileFullPath := filepath.Join(outputFolderPath, path)
+			log.Printf("Remove %s", fileFullPath)
+			os.Remove(fileFullPath)
+		}
+		return nil
+	})
+}
 func compileMarkdownFiles(sourceFolderPath string, outputFolderPath string, bookTitle string) {
 	filesOfInputFolder, err := sio.LoadFilesInFolder(sourceFolderPath)
 	if err != nil {
@@ -119,8 +137,8 @@ func generatePage(sourceFolderPath string, outputFolderPath string, menuContent 
 	defer outFile.Close()
 	ioutil.WriteFile(path.Join(outputFolderPath, relativeFilePath), outContent, 0644)
 
-	t := template.Must(template.ParseFS(defaultTemplate, "templates/default/*.html"))
-	t.ExecuteTemplate(outFile, "index.html", struct{ Title, Menu, MainContent interface{} }{
+	t := template.Must(template.ParseFS(defaultTemplate, "templates/default/*.tmpl"))
+	t.ExecuteTemplate(outFile, "index.tmpl", struct{ Title, Menu, MainContent interface{} }{
 		Title:       bookTitle,
 		Menu:        menuContent,
 		MainContent: string(outContent),

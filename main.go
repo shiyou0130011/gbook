@@ -50,17 +50,24 @@ func main() {
 	}
 
 	// generate output folder
-	if outFolderName == "" {
-		outFolderName, err = ioutil.TempDir(os.TempDir(), "gbook-"+path.Base(strings.ReplaceAll(sourceFolderPath, "\\", "/"))+"-*")
-		if err != nil {
-			log.Fatal("Cannot generate output folder")
-		}
-		log.Printf("Generate output folder: %s", outFolderName)
-	}
-
+	outFolderName = handleOutputFolder(sourceFolderPath, outFolderName)
+	initOutputFolder(outFolderName)
 	compileMarkdownFiles(sourceFolderPath, outFolderName, title)
 
 	if serveHTTP {
 		http.ListenAndServe(":4000", http.FileServer(http.Dir(outFolderName)))
 	}
+}
+
+func handleOutputFolder(sourceFolderPath, outputFolderPath string) string {
+	if outputFolderPath == "" {
+		outFolderName, err := ioutil.TempDir(os.TempDir(), "gbook-"+path.Base(strings.ReplaceAll(sourceFolderPath, "\\", "/"))+"-*")
+		if err != nil {
+			log.Fatal("Cannot generate output folder")
+		}
+		log.Printf("Generate output folder: %s", outFolderName)
+		return outFolderName
+	}
+
+	return outputFolderPath
 }
