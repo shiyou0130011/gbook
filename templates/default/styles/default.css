@@ -10,7 +10,7 @@ main{
 	overflow-y: hidden;
 }
 nav#menu-bar,
-article#main-article{
+#main-content{
 	overflow-y: overlay;
 	padding: 1rem 1.5rem ;
 }
@@ -18,8 +18,12 @@ article#main-article{
 nav#menu-bar{
 	width: 300px;
 }
-article#main-article{
+#main-content{
 	flex-basis: fit-content;
+}
+
+nav#icon-bar{
+	display: flex;
 }
 
 h1, h2, h3, h4, h5, h6, th, thead{
@@ -52,4 +56,14 @@ blockquote::after{
 	position: absolute;
 	right: .5rem;
 	bottom: .5rem;
+}
+
+/* theme effect */
+nav#menu-bar{
+	transition-property: width, padding, margin;	
+}
+body[data-menu="close"] nav#menu-bar{
+	width: 0;
+	padding: 0;
+	margin: 0;
 }

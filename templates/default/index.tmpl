@@ -6,19 +6,27 @@
 	<link href="/styles/default-theme.css" rel="stylesheet" />
 
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-
+	<link href="/styles/material-icons.css" rel="stylesheet" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<script src="/scripts/script.js"></script>
 </head>
-<body data-size="normal" data-font="sans-serif">
+<body data-size="normal" data-font="sans-serif" data-menu="open">
 	<main>
 		<nav id="menu-bar">
 			<a href="/">{{.Title}}</a>
 			{{.Menu}}
 		</nav>
-		<nav>
-			<ul>
-				<li><span class="material-icons-outlined"></span></li>
-			</ul>
-		</nav>
-		<article id="main-article">{{.MainContent}}</article>
+		<div id="main-content">
+			<nav id="icon-bar">
+				<div style="text-align: left; flex-shrink: 1; flex-grow: 1;">
+					<span id="toggle-menu" aria-label="Menu" title="Toggle Menu" class="material-icons"></span>
+				</div>
+				<div style="text-align: right;">
+					<span aria-label="font change" class="material-icons text-format"></span>
+				</div>
+			</nav>
+			<article id="main-article">{{.MainContent}}</article>
+		</div>
 	</main>
 </body>
