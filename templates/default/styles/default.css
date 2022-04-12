@@ -9,10 +9,14 @@ main{
 
 	overflow-y: hidden;
 }
+
+:root{
+	--main-content--padding: 1.5rem;
+}
 nav#menu-bar,
 #main-content{
 	overflow-y: overlay;
-	padding: 1rem 1.5rem ;
+	padding: 1rem var(--main-content--padding) ;
 }
 
 nav#menu-bar{
@@ -66,4 +70,10 @@ body[data-menu="close"] nav#menu-bar{
 	width: 0;
 	padding: 0;
 	margin: 0;
+}
+
+#format-menu{
+	display: none;
+	position: absolute;
+	right: var(--main-content--padding);
 }

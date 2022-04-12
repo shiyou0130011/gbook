@@ -35,9 +35,9 @@ body[data-menu="close"] #toggle-menu::before, .material-icons.menu-close::before
 .material-icons.text-format::before{
 	content: '\e165';
 }
-.material-icons.text_increase::before{
+.material-icons.text-increase::before{
 	content: '\eae2';
 }
-.material-icons.text_decrease::before{
+.material-icons.text-decrease::before{
 	content: '\eadd';
 }
