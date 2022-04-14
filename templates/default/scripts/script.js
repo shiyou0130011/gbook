@@ -16,6 +16,6 @@ $(document).ready(function(){
 	
 	$("#format-menu .text-increase").click(function(){
 		var fontIndex = fontSizeList.indexOf(document.body.dataset.size)
-		document.body.dataset.size = fontSizeList[Math.min(fontIndex + 1, fontSizeList.length)]
+		document.body.dataset.size = fontSizeList[Math.min(fontIndex + 1, fontSizeList.length - 1)]
 	})
 })
