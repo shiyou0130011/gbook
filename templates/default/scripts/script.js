@@ -18,4 +18,10 @@ $(document).ready(function(){
 		var fontIndex = fontSizeList.indexOf(document.body.dataset.size)
 		document.body.dataset.size = fontSizeList[Math.min(fontIndex + 1, fontSizeList.length - 1)]
 	})
+	$("#font-change-sans-serif").click(function(){
+		document.body.dataset.font = "sans-serif"
+	})
+	$("#font-change-serif").click(function(){
+		document.body.dataset.font = "serif"
+	})
 })
