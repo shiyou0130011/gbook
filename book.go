@@ -36,6 +36,8 @@ type Info struct {
 	SourceFolderPath string
 	OutputFolderPath string
 	menuContent      string
+	// Whether generate a check file
+	CompileCheckFile bool
 
 	Template     fs.ReadFileFS
 	TemplatePath string
@@ -160,8 +162,9 @@ func (i *Info) generatePage(relativeFilePath string) {
 		return
 	}
 	defer outFile.Close()
-	ioutil.WriteFile(path.Join(i.OutputFolderPath, relativeFilePath), outContent, 0644)
-
+	if i.CompileCheckFile {
+		ioutil.WriteFile(path.Join(i.OutputFolderPath, strings.Replace(relativeFilePath, ".md", ".compiled.xml", 1)), outContent, 0644)
+	}
 	t := template.Must(template.ParseFS(defaultTemplate, "templates/default/*.tmpl"))
 	t.ExecuteTemplate(outFile, "index.tmpl", struct{ Title, Menu, MainContent interface{} }{
 		Title:       i.Title,
