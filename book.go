@@ -27,6 +27,7 @@ var defaultTemplate embed.FS
 type ServeInfo struct {
 	Port        string
 	CertKeyPath string
+	Https       bool
 }
 
 // Info is the output book's information
@@ -34,8 +35,10 @@ type Info struct {
 	Title            string
 	SourceFolderPath string
 	OutputFolderPath string
-	Template         fs.ReadFileFS
 	menuContent      string
+
+	Template     fs.ReadFileFS
+	TemplatePath string
 
 	ServeInfo
 }
@@ -47,8 +50,9 @@ const (
 
 func New() *Info {
 	return &Info{
-		Title:    "GBook",
-		Template: defaultTemplate,
+		Title:        "GBook",
+		Template:     defaultTemplate,
+		TemplatePath: "templates/default",
 		ServeInfo: ServeInfo{
 			Port: "4000",
 		},
@@ -73,10 +77,10 @@ func (i *Info) generateOutputFolder() (err error) {
 	return
 }
 
-func (i *Info) InitOutputFolderWithFS(template fs.ReadFileFS, templatePath string) {
+func (i *Info) InitOutputFolder() {
 	i.generateOutputFolder()
 	log.Printf("Init the output folder %s", i.OutputFolderPath)
-	copy.FS(template, templatePath, i.OutputFolderPath)
+	copy.FS(i.Template, i.TemplatePath, i.OutputFolderPath)
 
 	fs.WalkDir(os.DirFS(i.OutputFolderPath), ".", func(path string, d fs.DirEntry, err error) error {
 		if filepath.Ext(path) == ".tmpl" {
