@@ -43,11 +43,6 @@ func main() {
 		log.Fatalf("Cannot find index page (%s)", path.Join(book.SourceFolderPath, indexPage))
 	}
 
-	_, err = os.Open(path.Join(book.SourceFolderPath, menuPage))
-	if err != nil {
-		log.Fatalf("Cannot find menu page (%s)", path.Join(book.SourceFolderPath, menuPage))
-	}
-
 	// generate output folder
 	book.InitOutputFolder()
 	book.Compile()

@@ -2,7 +2,6 @@ package gbook
 
 import (
 	"embed"
-	"html/template"
 	"io/fs"
 	"io/ioutil"
 	"log"
@@ -11,6 +10,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"text/template"
 
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/ast"
