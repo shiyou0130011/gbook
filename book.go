@@ -34,6 +34,8 @@ type Info struct {
 	Title            string
 	SourceFolderPath string
 	OutputFolderPath string
+	Template         fs.ReadFileFS
+	menuContent      string
 
 	ServeInfo
 }
@@ -42,6 +44,16 @@ const (
 	indexPage = "README.md"
 	menuPage  = "SUMMARY.md"
 )
+
+func New() *Info {
+	return &Info{
+		Title:    "GBook",
+		Template: defaultTemplate,
+		ServeInfo: ServeInfo{
+			Port: "4000",
+		},
+	}
+}
 
 // To generate the output folder.
 // if the output folder is not exist, it will also create it.
@@ -85,7 +97,7 @@ func (i *Info) Compile() (err error) {
 
 		filesOfInputFolder[index] = p
 	}
-	menuContent := ""
+	i.generateMenu()
 	for _, relativeFilePath := range filesOfInputFolder {
 		if relativeFilePath == menuPage {
 			continue
@@ -98,7 +110,7 @@ func (i *Info) Compile() (err error) {
 		}
 
 		if path.Ext(relativeFilePath) == ".md" {
-			i.generatePage(menuContent, relativeFilePath)
+			i.generatePage(relativeFilePath)
 		} else {
 			copy.File(i.SourceFolderPath, i.OutputFolderPath, relativeFilePath)
 		}
@@ -107,7 +119,7 @@ func (i *Info) Compile() (err error) {
 	return
 }
 
-func (i *Info) generatePage(menuContent string, relativeFilePath string) {
+func (i *Info) generatePage(relativeFilePath string) {
 	dir, f := filepath.Split(relativeFilePath)
 	var outputRelativeFilePath string
 	if f == "README.md" {
@@ -129,7 +141,7 @@ func (i *Info) generatePage(menuContent string, relativeFilePath string) {
 			parser.CommonExtensions|parser.AutoHeadingIDs,
 		),
 	)
-	//ast.WalkFunc(outNode, handleLinkTag)
+	ast.WalkFunc(outNode, handleLinkTag)
 	outContent := markdown.Render(
 		outNode,
 		html.NewRenderer(
@@ -149,9 +161,35 @@ func (i *Info) generatePage(menuContent string, relativeFilePath string) {
 	t := template.Must(template.ParseFS(defaultTemplate, "templates/default/*.tmpl"))
 	t.ExecuteTemplate(outFile, "index.tmpl", struct{ Title, Menu, MainContent interface{} }{
 		Title:       i.Title,
-		Menu:        menuContent,
+		Menu:        i.menuContent,
 		MainContent: string(outContent),
 	})
+}
+
+// generate the menu of nav-bar
+func (i *Info) generateMenu() {
+	log.Println("Generating the menu")
+	defer log.Print("Finish generating the menu")
+
+	mdData, err := ioutil.ReadFile(path.Join(i.SourceFolderPath, menuPage))
+	if err != nil {
+		i.menuContent = "<!-- " + err.Error() + "-->"
+		return
+	}
+
+	parentNode := markdown.Parse(mdData, parser.New())
+	ast.WalkFunc(parentNode, handleLinkTag)
+
+	i.menuContent = string(
+		markdown.Render(
+			parentNode,
+			html.NewRenderer(
+				html.RendererOptions{
+					Flags: html.CommonFlags,
+				},
+			),
+		),
+	)
 }
 
 func handleLinkTag(node ast.Node, entering bool) ast.WalkStatus {
