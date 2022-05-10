@@ -73,8 +73,8 @@ func Test_Info_CompileList(t *testing.T) {
 
 	content := `# Hello World
 
--Bob
--Alice
+* Bob
+* Alice
 
 1. One 
 2. Two`
