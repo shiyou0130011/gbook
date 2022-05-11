@@ -52,9 +52,10 @@ const (
 
 func New() *Info {
 	return &Info{
-		Title:        "GBook",
-		Template:     defaultTemplate,
-		TemplatePath: "templates/default",
+		Title:            "GBook",
+		Template:         defaultTemplate,
+		TemplatePath:     "templates/default",
+		CompileCheckFile: true,
 		ServeInfo: ServeInfo{
 			Port: "4000",
 		},
