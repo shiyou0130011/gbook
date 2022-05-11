@@ -1,6 +1,7 @@
 package gbook
 
 import (
+	"bytes"
 	"embed"
 	"io/fs"
 	"io/ioutil"
@@ -141,6 +142,7 @@ func (i *Info) generatePage(relativeFilePath string) {
 	if err != nil {
 		return
 	}
+	mdData = bytes.ReplaceAll(mdData, []byte("\r\n"), []byte("\n"))
 
 	outNode := markdown.Parse(
 		mdData,
