@@ -169,10 +169,11 @@ func (i *Info) generatePage(relativeFilePath string) {
 		ioutil.WriteFile(path.Join(i.OutputFolderPath, strings.Replace(relativeFilePath, ".md", ".compiled.xml", 1)), outContent, 0644)
 	}
 	t := template.Must(template.ParseFS(defaultTemplate, "templates/default/*.tmpl"))
-	t.ExecuteTemplate(outFile, "index.tmpl", struct{ Title, Menu, MainContent interface{} }{
+	t.ExecuteTemplate(outFile, "index.tmpl", struct{ Title, Menu, MainContent, Prefix interface{} }{
 		Title:       i.Title,
 		Menu:        i.menuContent,
 		MainContent: string(outContent),
+		Prefix:      "",
 	})
 }
 
