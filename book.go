@@ -96,7 +96,7 @@ func (i *Info) InitOutputFolder() {
 	})
 }
 func (i *Info) Compile() (err error) {
-	filesOfInputFolder, err := sio.LoadFilesInFolder(i.SourceFolderPath)
+	filesOfInputFolder, err := sio.LoadFilesInFolderIgnoreHiddenFiles(i.SourceFolderPath)
 	if err != nil {
 		return
 	}
@@ -220,7 +220,7 @@ func handleLinkTag(node ast.Node, entering bool) ast.WalkStatus {
 			u := string(link.Destination)
 			dir, file := filepath.Split(u)
 			if file == indexPage {
-				link.Destination = []byte(filepath.Join(dir, "index.html"))
+				link.Destination = []byte(path.Join(dir, "index.html"))
 			} else if file[len(file)-3:] == ".md" {
 				link.Destination = []byte(u[0:len(u)-3] + ".html")
 			}
