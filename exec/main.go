@@ -49,6 +49,7 @@ func main() {
 
 	if serveHTTP {
 		if book.CertKeyPath != "" {
+			log.Println("Serving on https://127.0.0.1:" + book.Port)
 			http.ListenAndServeTLS(
 				":"+book.Port,
 				filepath.Join(book.CertKeyPath, "cert.pem"),
@@ -56,6 +57,7 @@ func main() {
 				http.FileServer(http.Dir(book.OutputFolderPath)),
 			)
 		} else {
+			log.Println("Serving on http://127.0.0.1:" + book.Port)
 			http.ListenAndServe(":"+book.Port, http.FileServer(http.Dir(book.OutputFolderPath)))
 		}
 
