@@ -201,6 +201,7 @@ func (i *Info) generateMenu() {
 			),
 		),
 	)
+	i.menuContent = strings.ReplaceAll(strings.ReplaceAll(i.menuContent, "<ul>", "<ol>"), "</ul>", "</ol>")
 }
 
 func handleLinkTag(node ast.Node, entering bool) ast.WalkStatus {
