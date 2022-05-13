@@ -1,0 +1,14 @@
+body{
+	color: var(--body-color);
+}
+nav#menu-bar{
+	background-color: var(--menu-background);
+}
+nav#menu-bar a{
+	color: var(--menu-color)
+}
+
+pre, code{
+	background-color: var(--code-background);
+	color: var(--menu-color);
+}
