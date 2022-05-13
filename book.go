@@ -158,7 +158,7 @@ func (i *Info) generatePage(relativeFilePath string) {
 		outNode,
 		html.NewRenderer(
 			html.RendererOptions{
-				//Flags: html.CommonFlags | html.TOC | html.CommonFlags,
+				Flags: html.CommonFlags | html.NoreferrerLinks | html.NoopenerLinks,
 			},
 		),
 	)
@@ -209,16 +209,15 @@ func (i *Info) generateMenu() {
 
 func handleLinkTag(node ast.Node, entering bool) ast.WalkStatus {
 	if link, ok := node.(*ast.Link); ok {
-
 		if match, err := regexp.Match(`\b([A-Za-z]+:|)//.+`, link.Destination); err != nil {
 			log.Print(err)
 		} else if match {
-			if link.Attribute == nil {
-				link.Attribute = &ast.Attribute{
-					Attrs: map[string][]byte{},
+			for _, t := range link.AdditionalAttributes {
+				if t == `target="_blank"` {
+					return ast.GoToNext
 				}
 			}
-			link.Attrs["target"] = []byte("_blank")
+			link.AdditionalAttributes = append(link.AdditionalAttributes, `target="_blank"`)
 		} else {
 
 			u := string(link.Destination)
