@@ -25,3 +25,18 @@ $(document).ready(function(){
 		document.body.dataset.font = "serif"
 	})
 })
+$(document).ready(function(){
+	$("pre code").each(function(){
+		var lang = null
+		this.classList.forEach(function(c){
+			if (c.indexOf("language-") >= 0){
+				lang = c.replace("language-", "")
+			}
+		})
+		if(PR){
+			var newHTML = PR.prettyPrintOne(this.innerText, lang, true)
+			console.log(newHTML)
+			this.innerHTML = newHTML
+		}
+	})
+})

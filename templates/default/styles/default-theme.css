@@ -3,7 +3,21 @@
 	--body-color: #333;
 	--menu-background: #fafafa;
 	--menu-color: #364149;
-	--code-background: #ccc;
+	--code-background: #dfdfdf;
 	--code-text: #222;
 
+}
+
+/* Code Prettfy */
+ol.linenums li.L0, 
+ol.linenums li.L1, 
+ol.linenums li.L2, 
+ol.linenums li.L3, 
+ol.linenums li.L5, 
+ol.linenums li.L6, 
+ol.linenums li.L7, 
+ol.linenums li.L8, 
+ol.linenums li.L9, 
+ol.linenums li.L10 {
+	list-style: decimal;
 }
