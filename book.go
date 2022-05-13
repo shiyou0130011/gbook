@@ -144,6 +144,9 @@ func (i *Info) generatePage(relativeFilePath string) {
 	}
 	mdData = bytes.ReplaceAll(mdData, []byte("\r\n"), []byte("\n"))
 
+	urlPrefix, _ := filepath.Rel("/"+filepath.Dir(relativeFilePath), "/")
+	urlPrefix = strings.ReplaceAll(path.Join(urlPrefix, "/"), `\`, "/")
+
 	outNode := markdown.Parse(
 		mdData,
 		parser.NewWithExtensions(
@@ -171,9 +174,9 @@ func (i *Info) generatePage(relativeFilePath string) {
 	t := template.Must(template.ParseFS(defaultTemplate, "templates/default/*.tmpl"))
 	t.ExecuteTemplate(outFile, "index.tmpl", struct{ Title, Menu, MainContent, Prefix interface{} }{
 		Title:       i.Title,
-		Menu:        i.menuContent,
+		Menu:        strings.ReplaceAll(i.menuContent, `href="/`, `href="`+urlPrefix+"/"),
 		MainContent: string(outContent),
-		Prefix:      "",
+		Prefix:      urlPrefix,
 	})
 }
 
