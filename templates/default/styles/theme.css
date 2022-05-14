@@ -12,3 +12,7 @@ pre, code{
 	background-color: var(--code-background);
 	color: var(--menu-color);
 }
+
+pre{
+	box-shadow: 1px 1px 5px var(--body-color);
+}
