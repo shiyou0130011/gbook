@@ -16,3 +16,7 @@ pre, code{
 pre{
 	box-shadow: 1px 1px 5px var(--body-color);
 }
+
+table, table th, table td{
+	border-color: var(--table-border-color);
+}
