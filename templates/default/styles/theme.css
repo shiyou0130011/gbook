@@ -1,5 +1,6 @@
 body{
 	color: var(--body-color);
+	background-color: var(--body-background);
 }
 nav#menu-bar{
 	background-color: var(--menu-background);
@@ -18,5 +19,5 @@ pre{
 }
 
 table, table th, table td{
-	border-color: var(--table-border-color);
+	border-color: var(--border-color);
 }

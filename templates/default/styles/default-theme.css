@@ -1,10 +1,11 @@
 :root{
+	--body-background: inherit;
 	--body-color: #333;
 	--menu-background: #fafafa;
 	--menu-color: #364149;
 	--code-background: #dfdfdf;
 	--code-text: #222;
-	--table-border-color: #ddd
+	--border-color: #ddd;
 }
 
 /* Code Prettfy */
