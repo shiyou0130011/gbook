@@ -37,10 +37,19 @@ $(document).ready(function(){
 		$("link.theme-change-element").each(function(){
 			$(this).attr("href", $(this).attr(theme))
 		})
-		
+
 		localStorage.theme = theme
 	})
 })
+$(document).ready(function(){
+	document.body.dataset.font = localStorage.font || document.body.dataset.font 
+	document.body.dataset.size = localStorage.fontSize || document.body.dataset.size
+
+	if(localStorage.theme){
+		$(`.change-theme[data-target-theme="${localStorage.theme}"]`).click()
+	}
+})
+
 $(document).ready(function(){
 	$("pre code").each(function(){
 		var lang = null
