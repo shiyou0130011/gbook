@@ -3,9 +3,15 @@
 	<title>{{.Title}}</title>
 	<link href="{{.Prefix}}/styles/default.css" rel="stylesheet"/>
 	<link href="{{.Prefix}}/styles/default-font.css" rel="stylesheet"/>
-	<link href="{{.Prefix}}/styles/default-theme.css" rel="stylesheet" />
+	<link href="{{.Prefix}}/styles/default-theme.css" rel="stylesheet" class="theme-change-element"
+		data-theme-default="{{.Prefix}}/styles/default-theme.css"
+		data-theme-sepia="{{.Prefix}}/styles/sepia-theme.css"
+		/>
 	<link href="{{.Prefix}}/styles/theme.css" rel="stylesheet" />
-	<link href="{{.Prefix}}/styles/libs/google-code-prettify/prettify.css" rel="stylesheet" />
+	<link href="{{.Prefix}}/styles/libs/google-code-prettify/prettify.css" rel="stylesheet" class="theme-change-element"
+		data-theme-default="{{.Prefix}}/styles/libs/google-code-prettify/prettify.css"
+		data-theme-sepia="{{.Prefix}}/styles/libs/google-code-prettify/sunburst.css"
+		/>
 
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 	<link href="{{.Prefix}}/styles/material-icons.css" rel="stylesheet" />
@@ -32,12 +38,16 @@
 			</nav>
 			<div id="format-menu">
 				<div>
-					<span class="material-icons text-decrease"></span>
-					<span class="material-icons text-increase"></span>
+					<div><span class="material-icons text-decrease"></span></div>
+					<div><span class="material-icons text-increase"></span></div>
 				</div>
 				<div>
-					<span id="font-change-sans-serif">Sans-Serif</span>
-					<span id="font-change-serif">Serif</span>
+					<div><span id="font-change-sans-serif">Sans-Serif</span></div>
+					<div><span id="font-change-serif">Serif</span></div>
+				</div>
+				<div>
+					<div><span class="change-theme" data-target-theme="data-theme-default">Default</span></div>
+					<div><span class="change-theme" data-target-theme="data-theme-sepia">Sepia</span></div>
 				</div>
 			</div>
 			<article id="main-article">{{.MainContent}}</article>

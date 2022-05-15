@@ -123,10 +123,35 @@ body[data-menu="close"] #main-content{
 	width: 100%;
 	max-width: 100%;
 }
-
+/* format-menu */
 #format-menu{
 	display: none;
 	position: absolute;
 	right: var(--main-content--padding);
 }
 
+#format-menu > * {
+	display: flex;
+	justify-content: center;
+	text-align: center;
+}
+#format-menu > * > *{
+	flex-grow: 1;
+}
+
+#format-menu{
+	--format-menu-border-width: 1px;
+	--format-menu-border-style: solid; 
+}
+#format-menu{
+	border-width: var(--format-menu-border-width);
+	border-style: var(--format-menu-border-style);
+}
+#format-menu > *:not(:last-child){
+	border-bottom-width: var(--format-menu-border-width);
+	border-bottom-style: var(--format-menu-border-style);
+}
+#format-menu > * > *:not(:last-child) {
+	border-right-width: var(--format-menu-border-width);
+	border-right-style: var(--format-menu-border-style);
+}

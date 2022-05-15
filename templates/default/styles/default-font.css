@@ -1,4 +1,4 @@
-body[data-font="sans-serif"]{
+body[data-font="sans-serif"], #font-change-sans-serif{
 	font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -13,7 +13,7 @@ body[data-font="sans-serif"] #main-content th{
 	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-body[data-font=serif]{
+body[data-font=serif], #font-change-serif{
 	font-family: Georgia, 'Times New Roman', Times, serif;	
 }
 

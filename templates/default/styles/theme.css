@@ -21,3 +21,8 @@ pre{
 table, table th, table td{
 	border-color: var(--border-color);
 }
+#format-menu, 
+#format-menu div, 
+#format-menu div>*{
+	border-color: var(--border-color);
+}
