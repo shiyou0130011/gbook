@@ -155,3 +155,18 @@ body[data-menu="close"] #main-content{
 	border-right-width: var(--format-menu-border-width);
 	border-right-style: var(--format-menu-border-style);
 }
+
+
+/* Code Prettfy */
+ol.linenums li.L0, 
+ol.linenums li.L1, 
+ol.linenums li.L2, 
+ol.linenums li.L3, 
+ol.linenums li.L5, 
+ol.linenums li.L6, 
+ol.linenums li.L7, 
+ol.linenums li.L8, 
+ol.linenums li.L9, 
+ol.linenums li.L10 {
+	list-style: decimal;
+}
