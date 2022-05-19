@@ -114,7 +114,7 @@ func (i *Info) Compile() (err error) {
 		outDir := path.Join(i.OutputFolderPath, filepath.Dir(relativeFilePath))
 		if _, err := os.Stat(outDir); os.IsNotExist(err) {
 			log.Print("Create folder ", outDir)
-			os.Mkdir(outDir, os.ModeDir)
+			os.MkdirAll(outDir, os.ModeDir)
 		}
 
 		if path.Ext(relativeFilePath) == ".md" {
