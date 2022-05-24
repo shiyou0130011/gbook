@@ -1,0 +1,40 @@
+$max-lv: 6;
+@mixin list-style($lv: 1 ){
+	@if ($lv <= $max-lv){
+		$reset-counter-list: ();
+		@for $i from ($lv + 1) through $max-lv{
+			$reset-counter-list: $reset-counter-list nav-#{$i};
+		}
+
+
+		$display-counter: ();
+		@for $i from 1 through $lv{ 
+			$display-counter: $display-counter counter(nav-#{$i}) '.'; 
+		}  
+
+		&:before{
+			counter-reset: $reset-counter-list;
+			counter-increment: nav-#{$lv};
+			content: $display-counter ' ';
+		} 
+
+		>ol>li{
+			@include list-style($lv + 1);
+		}
+	}
+}
+
+nav#menu-bar{
+	counter-reset: nav-1;
+	li{
+		list-style: none;
+		&:before{
+			font-size: .75rem;
+			vertical-align: text-top;
+		}
+	}
+	>ol>li{
+		@include list-style(1);
+	}
+}
+

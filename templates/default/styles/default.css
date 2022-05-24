@@ -170,3 +170,45 @@ ol.linenums li.L9,
 ol.linenums li.L10 {
 	list-style: decimal;
 }
+
+/* Nav Menu list, from scss/nav-list.scss */
+nav#menu-bar {
+	counter-reset: nav-1;
+}
+nav#menu-bar li {
+	list-style: none;
+}
+nav#menu-bar li:before {
+	font-size: 0.75rem;
+	vertical-align: text-top;
+}
+nav#menu-bar > ol > li:before {
+	counter-reset: nav-2 nav-3 nav-4 nav-5 nav-6;
+	counter-increment: nav-1;
+	content: counter(nav-1) "." " ";
+}
+nav#menu-bar > ol > li > ol > li:before {
+	counter-reset: nav-3 nav-4 nav-5 nav-6;
+	counter-increment: nav-2;
+	content: counter(nav-1) "." counter(nav-2) "." " ";
+}
+nav#menu-bar > ol > li > ol > li > ol > li:before {
+	counter-reset: nav-4 nav-5 nav-6;
+	counter-increment: nav-3;
+	content: counter(nav-1) "." counter(nav-2) "." counter(nav-3) "." " ";
+}
+nav#menu-bar > ol > li > ol > li > ol > li > ol > li:before {
+	counter-reset: nav-5 nav-6;
+	counter-increment: nav-4;
+	content: counter(nav-1) "." counter(nav-2) "." counter(nav-3) "." counter(nav-4) "." " ";
+}
+nav#menu-bar > ol > li > ol > li > ol > li > ol > li > ol > li:before {
+	counter-reset: nav-6;
+	counter-increment: nav-5;
+	content: counter(nav-1) "." counter(nav-2) "." counter(nav-3) "." counter(nav-4) "." counter(nav-5) "." " ";
+}
+nav#menu-bar > ol > li > ol > li > ol > li > ol > li > ol > li > ol > li:before {
+	counter-reset: nav-7 nav-6;
+	counter-increment: nav-6;
+	content: counter(nav-1) "." counter(nav-2) "." counter(nav-3) "." counter(nav-4) "." counter(nav-5) "." counter(nav-6) "." " ";
+}
