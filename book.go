@@ -75,7 +75,7 @@ func (i *Info) generateOutputFolder() (err error) {
 
 	if _, fileExistErr := os.Stat(i.OutputFolderPath); os.IsNotExist(fileExistErr) {
 		log.Print("Create folder ", i.OutputFolderPath)
-		err = os.Mkdir(i.OutputFolderPath, os.ModeDir)
+		err = os.Mkdir(i.OutputFolderPath, 0755)
 	}
 
 	return
@@ -114,7 +114,7 @@ func (i *Info) Compile() (err error) {
 		outDir := path.Join(i.OutputFolderPath, filepath.Dir(relativeFilePath))
 		if _, err := os.Stat(outDir); os.IsNotExist(err) {
 			log.Print("Create folder ", outDir)
-			os.MkdirAll(outDir, os.ModeDir)
+			os.MkdirAll(outDir, 0755)
 		}
 
 		if path.Ext(relativeFilePath) == ".md" {
