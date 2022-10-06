@@ -15,7 +15,7 @@ main{
 }
 nav#menu-bar,
 #main-content{
-	overflow-y: overlay;
+	overflow-y: auto;
 	padding: 1rem var(--main-content--padding) ;
 }
 
