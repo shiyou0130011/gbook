@@ -3,6 +3,7 @@ package gbook
 import (
 	"bytes"
 	"embed"
+	"fmt"
 	"io/fs"
 	"io/ioutil"
 	"log"
@@ -24,7 +25,7 @@ import (
 //go:embed templates/default
 var defaultTemplate embed.FS
 
-//ServeInfo is the serving data of the book
+// ServeInfo is the serving data of the book
 type ServeInfo struct {
 	Port        string
 	CertKeyPath string
@@ -172,11 +173,12 @@ func (i *Info) generatePage(relativeFilePath string) {
 		ioutil.WriteFile(path.Join(i.OutputFolderPath, strings.Replace(relativeFilePath, ".md", ".compiled.xml", 1)), outContent, 0644)
 	}
 	t := template.Must(template.ParseFS(defaultTemplate, "templates/default/*.tmpl"))
-	t.ExecuteTemplate(outFile, "index.tmpl", struct{ Title, Menu, MainContent, Prefix interface{} }{
+	t.ExecuteTemplate(outFile, "index.tmpl", struct{ Title, Menu, MainContent, TOC, Prefix interface{} }{
 		Title:       i.Title,
 		Menu:        strings.ReplaceAll(i.menuContent, `href="/`, `href="`+urlPrefix+"/"),
 		MainContent: string(outContent),
 		Prefix:      urlPrefix,
+		TOC:         generateTOC(outNode),
 	})
 }
 
@@ -231,4 +233,54 @@ func handleLinkTag(node ast.Node, entering bool) ast.WalkStatus {
 	}
 
 	return ast.GoToNext
+}
+
+// generate TOC from total node
+func generateTOC(articleNode ast.Node) string {
+
+	preLevel := -1
+	result := &bytes.Buffer{}
+
+	const listTag = `ol`
+
+	ast.WalkFunc(articleNode, func(node ast.Node, entering bool) ast.WalkStatus {
+		if heading, ok := node.(*ast.Heading); ok && entering {
+			if heading.IsTitleblock || heading.Level == 1 {
+				return ast.GoToNext
+			}
+			if preLevel < 0 {
+
+			} else if preLevel < heading.Level {
+				result.WriteString(fmt.Sprintf(`<%s>`, listTag))
+			} else if preLevel > heading.Level {
+				result.WriteString(fmt.Sprintf(`</li></%s>`, listTag))
+			} else {
+				result.WriteString(`</li>`)
+			}
+
+			headerContent := heading.Content
+			for _, c := range heading.Children {
+				if t, ok := c.(*ast.Text); ok {
+					headerContent = t.Literal
+				}
+			}
+
+			result.WriteString(fmt.Sprintf(`<li><a href="#%s">%s</a>
+			`, heading.HeadingID, headerContent))
+
+			preLevel = heading.Level
+		}
+		return ast.GoToNext
+	})
+
+	if result.Len() == 0 {
+		return ""
+	}
+
+	return fmt.Sprintf(`<%s>%s</li></%s>`,
+		listTag,
+		result.String(),
+		listTag,
+	)
+
 }

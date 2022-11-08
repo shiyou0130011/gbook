@@ -1,9 +1,11 @@
 :root{
-	--body-background: inherit;
+	--body-background: white;
 	--body-color: #333;
 	--menu-background: #fafafa;
 	--menu-color: #364149;
 	--code-background: #dfdfdf;
 	--code-text: #222;
 	--border-color: #ddd;
+	--toc-background: #cbcbcb;
+	--toc-color: #4a4a4a;
 }

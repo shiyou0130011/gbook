@@ -25,4 +25,15 @@ table, table th, table td{
 #format-menu div, 
 #format-menu div>*{
 	border-color: var(--border-color);
+	background-color: var(--body-background);
+}
+
+
+nav#table-of-content{
+	border-color: var(--menu-background);
+	background-color: var(--toc-background);
+}
+
+nav#table-of-content a{
+	color: var(--toc-color);
 }

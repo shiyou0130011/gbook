@@ -13,6 +13,38 @@ main{
 :root{
 	--main-content--padding: 1.5rem;
 }
+
+/* z index */
+:root {
+	--z-index-format: 300;
+	--z-index-toc: 100;
+
+}
+
+/* TOC */
+nav#table-of-content{
+	position: absolute;
+	top: calc(var(--body-font-size) * 2.5);
+	right: var(--main-content--padding);
+	z-index: var(--z-index-toc);
+
+	min-width: 300px;
+	max-width: 320px;
+
+	padding: 0.5rem;
+}
+
+nav#table-of-content>ol, nav#table-of-content>ul{
+	padding-left: 1.5rem;
+	overflow-wrap: break-word;
+}
+
+nav#table-of-content li::marker {
+	font-size: 0.75rem;
+	vertical-align: text-top;
+}
+
+/* Main content */
 nav#menu-bar,
 #main-content{
 	overflow-y: auto;
@@ -128,6 +160,8 @@ body[data-menu="close"] #main-content{
 	display: none;
 	position: absolute;
 	right: var(--main-content--padding);
+
+	z-index: var(--z-index-format);
 }
 
 #format-menu > * {
