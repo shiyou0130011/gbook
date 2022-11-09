@@ -75,7 +75,7 @@ func (i *Info) generateOutputFolder() (err error) {
 	}
 
 	if _, fileExistErr := os.Stat(i.OutputFolderPath); os.IsNotExist(fileExistErr) {
-		log.Print("Create folder ", i.OutputFolderPath)
+		log.Printf("Create folder \x1b[34m%s\x1b[0m", i.OutputFolderPath)
 		err = os.Mkdir(i.OutputFolderPath, 0755)
 	}
 
@@ -112,9 +112,9 @@ func (i *Info) Compile() (err error) {
 			continue
 		}
 
-		outDir := path.Join(i.OutputFolderPath, filepath.Dir(relativeFilePath))
+		outDir := filepath.Join(i.OutputFolderPath, filepath.Dir(relativeFilePath))
 		if _, err := os.Stat(outDir); os.IsNotExist(err) {
-			log.Print("Create folder ", outDir)
+			log.Printf("Create sub-folder \x1b[34m%s\x1b[0m", outDir)
 			os.MkdirAll(outDir, 0755)
 		}
 
@@ -132,21 +132,21 @@ func (i *Info) generatePage(relativeFilePath string) {
 	dir, f := filepath.Split(relativeFilePath)
 	var outputRelativeFilePath string
 	if f == "README.md" {
-		outputRelativeFilePath = path.Join(dir, "index.html")
+		outputRelativeFilePath = filepath.Join(dir, "index.html")
 	} else {
-		outputRelativeFilePath = path.Join(dir, f[0:len(f)-2]+"html")
+		outputRelativeFilePath = filepath.Join(dir, f[0:len(f)-2]+"html")
 	}
 
-	log.Printf("Generating %s (output: %s)", relativeFilePath, outputRelativeFilePath)
+	log.Printf("Generating \x1b[33m%s\x1b[0m (output: \x1b[33m%s\x1b[0m)", relativeFilePath, outputRelativeFilePath)
 
-	mdData, err := ioutil.ReadFile(path.Join(i.SourceFolderPath, relativeFilePath))
+	mdData, err := ioutil.ReadFile(filepath.Join(i.SourceFolderPath, relativeFilePath))
 	if err != nil {
 		return
 	}
 	mdData = bytes.ReplaceAll(mdData, []byte("\r\n"), []byte("\n"))
 
 	urlPrefix, _ := filepath.Rel("/"+filepath.Dir(relativeFilePath), "/")
-	urlPrefix = strings.ReplaceAll(path.Join(urlPrefix, "/"), `\`, "/")
+	urlPrefix = strings.ReplaceAll(filepath.Join(urlPrefix, "/"), `\`, "/")
 
 	outNode := markdown.Parse(
 		mdData,
